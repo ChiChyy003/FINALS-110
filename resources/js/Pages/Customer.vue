@@ -2,18 +2,18 @@
   <Head title="Customer Dashboard" />
 
   <AuthenticatedLayout>
-    <div class="space-y-6">
-      <h2 class="text-3xl font-bold text-blue-800">
+    <div class="min-h-screen bg-gradient-to-b from-[#EDCFA9] to-[#AA4A30] dark:from-[#D57149] dark:to-[#AA4A30] py-5">
+      <h2 class="text-3xl font-bold text-white pb-4 px-2 text-center">
         Welcome to Frosty Delights!
       </h2>
 
       <!-- Search and Filter -->
-      <div class="bg-white shadow rounded-lg p-4 flex items-center">
+      <div class="flex justify-center px-4 p-0 flex items-center pl-30">
         <input
           v-model="searchQuery"
           @keyup.esc="clearSearch"
           placeholder="Search ice creams..."
-          class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-8/12 px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <button
           @click="clearSearch"
@@ -28,9 +28,9 @@
       >
         No ice creams match your search.
       </div>
-
+      <br>
       <!-- Ice Cream List -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pl-20 pr-20">
         <div
           v-for="icecream in filteredIcecreams"
           :key="icecream.icecream_id"
@@ -42,14 +42,14 @@
             class="w-full h-48 object-cover"
           />
           <div class="p-4">
-            <h3 class="text-xl font-semibold text-blue-600">
+            <h3 class="text-xl font-semibold text-[#AA4A30]">
               {{ icecream.icecream_name || icecream.name }}
             </h3>
             <p class="text-gray-600 mt-2">{{ icecream.description }}</p>
             <div class="mt-4 flex justify-between items-center">
               <button
                 @click="viewDetails(icecream)"
-                class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
+                class="bg-[#AA4A30] text-white px-4 py-2 rounded-md hover:bg-[#D57149] transition duration-300"
               >
                 View Details
               </button>
@@ -107,6 +107,9 @@
                   <p class="text-sm text-gray-500">
                     Available stocks: {{ selectedIceCream.stock }}
                   </p>
+                  <p class="text-sm text-gray-500">
+                    Status: {{ selectedIceCream.status }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -114,7 +117,7 @@
               <button
                 @click="closeDetails"
                 type="button"
-                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm"
+                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-[#D57149] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm"
               >
                 Close
               </button>
@@ -178,10 +181,17 @@ watch(searchQuery, (newQuery) => {
     return;
   }
 
-  if (newQuery.trim() === "") {
+  // Sanitize input: limit length to 50 characters and remove special symbols and '@'
+  const sanitizedQuery = newQuery.slice(0, 50).replace(/[^a-zA-Z0-9\s]/g, "");
+  if (sanitizedQuery !== newQuery) {
+    searchQuery.value = sanitizedQuery;
+    return; // Prevents further execution if input was sanitized
+  }
+
+  if (sanitizedQuery.trim() === "") {
     clearSearch();
   } else {
-    performSearch(newQuery);
+    performSearch(sanitizedQuery);
   }
 });
 
@@ -193,4 +203,3 @@ const closeDetails = () => {
   selectedIceCream.value = null;
 };
 </script>
-

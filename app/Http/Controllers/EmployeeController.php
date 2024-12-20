@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class EmployeeController extends Controller
@@ -44,6 +45,7 @@ class EmployeeController extends Controller
                 $validated['price'], // Price
                 $validated['image_url'] ?? null, // Image URL
             ]);
+            // dd('hello')
 
             // If the function returns an error
             if (isset($result[0]->edit_icecreams) && strpos($result[0]->edit_icecreams, 'Error') !== false) {
@@ -63,6 +65,7 @@ class EmployeeController extends Controller
 
     public function addIcecream(Request $request)
     {
+        
         // Validate the incoming request
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -71,6 +74,8 @@ class EmployeeController extends Controller
             'manufactured_date' => 'nullable|date',
             'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        
 
         // Check if the image is provided and handle the upload
         if ($request->hasFile('image_url')) {
@@ -88,7 +93,6 @@ class EmployeeController extends Controller
                 $validated['price'],               // Price
                 $validated['image_url'] ?? null,   // Image URL
             ]);
-
             // Check for errors from the database function
             if (isset($result[0]->add_icecreams) && strpos($result[0]->add_icecreams, 'Error') !== false) {
                 return redirect()->back()->with('error', $result[0]->add_icecreams);

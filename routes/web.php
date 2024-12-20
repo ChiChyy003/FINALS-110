@@ -50,38 +50,8 @@ Route::middleware(['auth', 'setDB'])->group(function () {
 
 
 
-        // Route::get('/librarian-dashboard/search', [LibrarianController::class, 'search'])->name('librarian.search');
     });
 });
-
-
-
-
-
-
-
-
-
-
-//route for data fetch
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
